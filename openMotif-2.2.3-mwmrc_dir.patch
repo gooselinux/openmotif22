@@ -1,0 +1,137 @@
+--- openMotif-2.2.3/doc/man/man4/mwmrc.4.bindings	2002-01-05 16:21:12.000000000 +0100
++++ openMotif-2.2.3/doc/man/man4/mwmrc.4	2006-06-27 15:52:59.000000000 +0200
+@@ -57,7 +57,7 @@
+ It contains descriptions of resources that cannot easily be
+ written using standard X Window System, Version 11 resource syntax\&. The resource
+ description file contains entries that are referred to by X resources in
+-defaults files (for example, \fB/usr/X11R6/lib/X11/app-defaults/Mwm\fP)
++defaults files (for example, \fB/usr/share/X11/app-defaults/Mwm\fP)
+ or in the \fBRESOURCE_MANAGER\fP property on the
+ root window\&. For example, the resource description file enables you to specify
+ different types of window menus; however, an X resource is used to specify
+@@ -72,8 +72,8 @@
+ .nf
+ \f(CW$HOME/$LANG/\&.mwmrc
+ $HOME/\&.mwmrc
+-/usr/X11R6/lib/X11/$LANG/system\&.mwmrc
+-/usr/X11R6/lib/X11/system\&.mwmrc\fR
++/etc/X11/mwm/$LANG/system\&.mwmrc
++/etc/X11/mwm/system\&.mwmrc\fR
+ .fi
+ .PP
+ .PP
+@@ -84,7 +84,7 @@
+ be specified from the command line:
+ .PP
+ .nf
+-\f(CW/usr/X11R6/bin/X11/mwm -xrm "mwm*configFile: mymwmrc"\fR
++\f(CW/usr/bin/mwm -xrm "mwm*configFile: mymwmrc"\fR
+ .fi
+ .PP
+ .SS "Resource Types"
+@@ -626,8 +626,8 @@
+ .nf
+ \fB$HOME/$LANG/\&.mwmrc
+ $HOME/\&.mwmrc
+-/usr/X11R6/lib/X11/$LANG/system\&.mwmrc
+-/usr/X11R6/lib/X11/system\&.mwmrc\fP
++/etc/X11/mwm/$LANG/system\&.mwmrc
++/etc/X11/mwm/system\&.mwmrc\fP
+ .fi
+ .SH "RELATED INFORMATION"
+ .PP
+--- openMotif-2.2.3/doc/man/man1/mwm.1.bindings	2002-01-05 16:21:11.000000000 +0100
++++ openMotif-2.2.3/doc/man/man1/mwm.1	2006-06-27 15:52:59.000000000 +0200
+@@ -678,8 +678,8 @@
+ \fB$HOME\fP/\fBconfigFile\fP\&. If the \fIconfigFile\fP pathname does not begin with "~/" or "/", \fBmwm\fP considers it to be relative to the current working directory\&. If
+ the \fIconfigFile\fP resource is not specified
+ or if that file does not exist, \fBmwm\fP uses several default
+-paths to find a configuration file\&. The order of the search is shown below: \fB/usr/X11R6/lib/X11/$LANG/system\&.mwmrc\fP\(dg
+-\fB/usr/X11R6/lib/X11/system\&.mwmrc\fP\(dg Paths marked with \&'\(dg\&' are
++paths to find a configuration file\&. The order of the search is shown below: \fB/etc/X11/mwm/$LANG/system\&.mwmrc\fP\(dg
++\fB/etc/X11/mwm/system\&.mwmrc\fP\(dg Paths marked with \&'\(dg\&' are
+ implementation dependent\&.
+ .IP "\fIdeiconifyKeyFocus\fP\ (class\  \fIDeiconifyKeyFocus\fP)" 10
+ This resource applies only when the keyboard input focus policy is explicit\&.
+@@ -1344,9 +1344,9 @@
+ function\&.
+ .SS "Files"
+ .PP
+-\fB/usr/X11R6/lib/X11/$LANG/system\&.mwmrc\fP
++\fB/etc/X11/mwm/$LANG/system\&.mwmrc\fP
+ .PP
+-\fB/usr/X11R6/lib/X11/system\&.mwmrc\fP
++\fB/etc/X11/mwm/system\&.mwmrc\fP
+ .PP
+ \fB/usr/X11R6/lib/X11/app-defaults/Mwm\fP
+ .PP
+--- openMotif-2.2.3/clients/mwm/Makefile.in.bindings	2006-06-27 15:52:59.000000000 +0200
++++ openMotif-2.2.3/clients/mwm/Makefile.in	2006-06-27 15:55:40.000000000 +0200
+@@ -230,7 +230,7 @@
+ MAINTAINERCLEANFILES = Makefile.in
+ EXTRA_DIST = Mwm.msg $(rc_DATA)
+ SUBDIRS = WmWsmLib
+-rcdir = @LIB32DIR@
++rcdir = /etc/X11/mwm
+ rc_DATA = system.mwmrc
+ mwm_LDADD = ./WmWsmLib/libWsm.a ../../lib/Xm/libXm.la 
+ INCLUDES = -DLARGECURSORS -DR2_COMPAT -DUNMAP_ON_RESTART \
+--- openMotif-2.2.3/clients/mwm/WmResParse.c.bindings	2002-01-10 21:55:37.000000000 +0100
++++ openMotif-2.2.3/clients/mwm/WmResParse.c	2006-06-27 15:52:59.000000000 +0200
+@@ -2402,15 +2402,15 @@
+   {
+ #endif /* PANELIST */
+ 
+-#ifndef LIBDIR
+-#define LIBDIR "/usr/lib/X11"
++#ifndef MWMRC_DIR
++#define MWMRC_DIR "/etc/X11/mwm"
+ #endif
+     if (LANG != NULL)
+     {
+ #ifdef WSM
+ 	if (MwmBehavior)
+ 	{
+-	    strcpy(cfileName, LIBDIR);
++	    strcpy(cfileName, MWMRC_DIR);
+ 	    strncat(cfileName, "/", MAXWMPATH-strlen(cfileName));
+ 	    strncat(cfileName, LANG, MAXWMPATH-strlen(cfileName));
+ 	    strncat(cfileName, SLASH_MWMRC, MAXWMPATH - strlen(cfileName));
+@@ -2426,7 +2426,7 @@
+        /*
+ 	* Try /$LANG/system.mwmrc within the install tree
+ 	*/
+-	strcpy(cfileName, LIBDIR);
++	strcpy(cfileName, MWMRC_DIR);
+ 	strncat(cfileName, "/", MAXWMPATH-strlen(cfileName));
+ 	strncat(cfileName, LANG, MAXWMPATH-strlen(cfileName));
+ 	strncat(cfileName, SLASH_MWMRC, MAXWMPATH - strlen(cfileName));
+@@ -2448,7 +2448,7 @@
+ #ifdef WSM
+     if (MwmBehavior)
+     {
+-	strcpy(cfileName, LIBDIR);
++	strcpy(cfileName, MWMRC_DIR);
+ 	strncat(cfileName, SLASH_MWMRC, MAXWMPATH - strlen(cfileName));
+ #ifdef PANELIST
+ 	fileP = fopen (cfileName, "r");
+@@ -2472,7 +2472,7 @@
+     /*
+      * Try /system.mwmrc within the install tree
+      */
+-    strcpy(cfileName, LIBDIR);
++    strcpy(cfileName, MWMRC_DIR);
+     strncat(cfileName, SLASH_MWMRC, MAXWMPATH - strlen(cfileName));
+ 
+     if (LANG != NULL) 
+--- openMotif-2.2.3/clients/mwm/Makefile.am.bindings	2006-06-27 15:52:59.000000000 +0200
++++ openMotif-2.2.3/clients/mwm/Makefile.am	2006-06-27 15:54:05.000000000 +0200
+@@ -4,7 +4,7 @@
+ 
+ SUBDIRS = WmWsmLib
+ 
+-rcdir = @LIB32DIR@
++rcdir = /etc/X11/mwm
+ 
+ rc_DATA = system.mwmrc
+ 

@@ -1,0 +1,10 @@
+--- openMotif-2.2.3/lib/Xm/Traversal.c.free_children	2006-02-02 12:33:44.000000000 +0100
++++ openMotif-2.2.3/lib/Xm/Traversal.c	2006-02-02 12:33:47.000000000 +0100
+@@ -1555,6 +1555,7 @@
+      XDestroyRegion(region);
+      XDestroyRegion(tmp_region);
+      XDestroyRegion(left_region);
++     if (children) XFree(children);
+      _XmAppUnlock(app);
+      return (value);
+   }

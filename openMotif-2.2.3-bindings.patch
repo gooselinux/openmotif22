@@ -1,0 +1,45 @@
+--- openMotif-2.2.3/configure.in.bindings	2006-06-27 16:01:04.000000000 +0200
++++ openMotif-2.2.3/configure.in	2006-06-27 16:01:05.000000000 +0200
+@@ -207,7 +207,7 @@
+ INCDIR="${includedir}/X11"
+ AC_SUBST(INCDIR)
+ 
+-XMBINDDIR_FALLBACK="${libdir%64}/X11/bindings"
++XMBINDDIR_FALLBACK="${prefix}/share/X11/bindings"
+ AC_SUBST(XMBINDDIR_FALLBACK)
+ 
+ AC_OUTPUT([Makefile \
+--- openMotif-2.2.3/doc/man/man3/VirtualBindings.3.bindings	2002-01-04 22:55:30.000000000 +0100
++++ openMotif-2.2.3/doc/man/man3/VirtualBindings.3	2006-06-27 16:00:01.000000000 +0200
+@@ -90,7 +90,7 @@
+ If it has found no bindings, Motif next looks for the file
+ \fBxmbind\&.alias\fP in the directory specified by the environment
+ variable \fBXMBINDDIR\fP, if \fBXMBINDDIR\fP is set, or in the directory
+-\fB/usr/lib/Xm/bindings\fP if \fBXMBINDDIR\fP is not set\&.
++\fB/usr/share/X11/bindings\fP if \fBXMBINDDIR\fP is not set\&.
+ If this file exists Motif searches it for a pathname associated with the
+ vendor string or with the vendor string and vendor release\&.
+ If it finds such a pathname and if that file exists, Motif loads the
+--- openMotif-2.2.3/lib/Xm/XmosP.h.bindings	2003-08-19 20:38:24.000000000 +0200
++++ openMotif-2.2.3/lib/Xm/XmosP.h	2006-06-27 16:00:01.000000000 +0200
+@@ -183,7 +183,7 @@
+ 
+ #define XMBINDDIR "XMBINDDIR"
+ #ifndef XMBINDDIR_FALLBACK
+-#define XMBINDDIR_FALLBACK "/usr/lib/Xm/bindings"
++#define XMBINDDIR_FALLBACK "/usr/share/X11/bindings"
+ #endif
+ #define XMBINDFILE "xmbind.alias"
+ #define MOTIFBIND ".motifbind"
+ AC_OUTPUT([Makefile \
+--- openMotif-2.2.3/configure.bindings	2006-06-27 16:12:33.000000000 +0200
++++ openMotif-2.2.3/configure	2006-06-27 16:13:07.000000000 +0200
+@@ -25998,7 +25998,7 @@
+ INCDIR="${includedir}/X11"
+ 
+ 
+-XMBINDDIR_FALLBACK="${libdir%64}/X11/bindings"
++XMBINDDIR_FALLBACK="${prefix}/share/X11/bindings"
+ 
+ 
+                                                                                                                                                                                                                                                                                         ac_config_files="$ac_config_files Makefile bindings/Makefile bitmaps/Makefile clients/Makefile clients/mwm/Makefile clients/mwm/WmWsmLib/Makefile clients/uil/Makefile clients/xmbind/Makefile config/Makefile config/cf/Makefile config/imake/Makefile config/util/Makefile config/makedepend/Makefile include/Makefile include/Dt/Makefile lib/Makefile lib/Xm/Makefile lib/Mrm/Makefile localized/Makefile localized/util/Makefile doc/Makefile doc/man/Makefile doc/man/man1/Makefile doc/man/man3/Makefile doc/man/man4/Makefile doc/man/man5/Makefile tools/Makefile tools/wml/Makefile"

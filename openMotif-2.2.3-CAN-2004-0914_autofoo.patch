@@ -1,0 +1,39 @@
+--- openMotif-2.2.3/lib/Xm/Makefile.in.CAN-2004-0914_autofoo	2004-11-22 14:14:00.954776998 +0100
++++ openMotif-2.2.3/lib/Xm/Makefile.in	2004-11-22 14:15:52.073487273 +0100
+@@ -93,7 +93,7 @@
+ 	XpmCrPFrBuf.c XpmRdFToDat.c XpmWrFFrP.c Xpmrgb.c XpmCrDatFrI.c \
+ 	XpmCrPFrDat.c XpmRdFToI.c Xpmcreate.c Xpmscan.c XpmCrDatFrP.c \
+ 	XpmCrPFrI.c XpmRdFToP.c Xpmdata.c XpmCrIFrBuf.c XpmImage.c \
+-	XpmWrFFrBuf.c Xpmhashtab.c IconH.c Container.c IconG.c \
++	XpmWrFFrBuf.c Xpmhashtab.c Xpms_popen.c IconH.c Container.c IconG.c \
+ 	Notebook.c ComboBox.c GrabShell.c SpinB.c SSpinB.c TxtPropCv.c \
+ 	XmStringSeg.c TranslNew.c SlideC.c ToolTip.c EditresCom.c \
+ 	XmExtUtil.c Column.c ButtonBox.c ColorS.c Picture.c DataFSel.c \
+@@ -137,7 +137,8 @@
+ 	XpmRdFToDat.lo XpmWrFFrP.lo Xpmrgb.lo XpmCrDatFrI.lo \
+ 	XpmCrPFrDat.lo XpmRdFToI.lo Xpmcreate.lo Xpmscan.lo \
+ 	XpmCrDatFrP.lo XpmCrPFrI.lo XpmRdFToP.lo Xpmdata.lo \
+-	XpmCrIFrBuf.lo XpmImage.lo XpmWrFFrBuf.lo Xpmhashtab.lo
++	XpmCrIFrBuf.lo XpmImage.lo XpmWrFFrBuf.lo Xpmhashtab.lo \
++	Xpms_popen.lo
+ am__objects_5 = IconH.lo Container.lo IconG.lo Notebook.lo ComboBox.lo \
+ 	GrabShell.lo SpinB.lo SSpinB.lo TxtPropCv.lo XmStringSeg.lo \
+ 	TranslNew.lo
+@@ -524,7 +525,8 @@
+         XpmCrBufFrP.c  XpmCrPFrBuf.c  XpmRdFToDat.c  XpmWrFFrP.c    Xpmrgb.c \
+         XpmCrDatFrI.c  XpmCrPFrDat.c  XpmRdFToI.c    Xpmcreate.c    Xpmscan.c \
+         XpmCrDatFrP.c  XpmCrPFrI.c    XpmRdFToP.c    Xpmdata.c \
+-        XpmCrIFrBuf.c  XpmImage.c     XpmWrFFrBuf.c  Xpmhashtab.c
++        XpmCrIFrBuf.c  XpmImage.c     XpmWrFFrBuf.c  Xpmhashtab.c \
++        Xpms_popen.c
+ 
+ NEW_WID_SRCS = IconH.c        Container.c     IconG.c  \
+         Notebook.c     ComboBox.c     GrabShell.c     SpinB.c  \
+@@ -809,6 +811,7 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Xpmcreate.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Xpmdata.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Xpmhashtab.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Xpms_popen.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Xpmmisc.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Xpmparse.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Xpmrgb.Plo@am__quote@

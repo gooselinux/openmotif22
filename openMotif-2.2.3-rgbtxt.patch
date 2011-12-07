@@ -1,0 +1,11 @@
+--- openMotif-2.2.3/lib/Xm/ColorS.c.rgbtxt	2006-06-27 15:49:29.000000000 +0200
++++ openMotif-2.2.3/lib/Xm/ColorS.c	2006-06-27 15:51:02.000000000 +0200
+@@ -118,7 +118,7 @@
+       offset(rgb_file), XmRString, (XtPointer) "sys$manager:decw$rgb.dat" },
+ #else
+     { XmNrgbFile, XmCString, XmRString, sizeof(String),
+-      offset(rgb_file), XmRString, (XtPointer) "/usr/lib/X11/rgb.txt" },
++      offset(rgb_file), XmRString, (XtPointer) "/usr/share/X11/rgb.txt" },
+ #endif
+     { XmNmarginWidth, XmCMargin, XmRHorizontalDimension,sizeof(Dimension),
+       offset(margin_width), XmRImmediate, (XtPointer) 2 },

@@ -1,0 +1,21 @@
+--- openMotif-2.2.3/lib/Xm/List.c.xmlist_fix	2006-01-04 11:44:33.000000000 -0500
++++ openMotif-2.2.3/lib/Xm/List.c	2006-01-04 11:45:36.000000000 -0500
+@@ -3596,10 +3597,18 @@
+ 	    XmString item,
+ 	    int pos)
+ {
++  int i;
+   pos--;
+ 
+   XmStringFree(lw->list.items[pos]);
+   lw->list.items[pos] = XmStringCopy(item);
++  /*Selected items should be replaced also*/
++  for(i=0; i<lw->list.selectedItemCount; i++)
++      if(lw->list.selectedPositions[i]==pos+1) {
++         XmStringFree(lw->list.selectedItems[i]);
++	 lw->list.selectedItems[i]=XmStringCopy(item);
++      }
++		      
+ }
+ 
+ 

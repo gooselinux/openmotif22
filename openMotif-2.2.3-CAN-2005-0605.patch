@@ -1,0 +1,38 @@
+--- openMotif-2.2.3/lib/Xm/Xpmscan.c.CAN-2005-0605	2005-04-04 12:53:36.603530341 +0200
++++ openMotif-2.2.3/lib/Xm/Xpmscan.c	2005-04-04 12:53:36.665521839 +0200
+@@ -593,8 +593,8 @@
+     char *dst;
+     unsigned int *iptr;
+     char *data;
+-    unsigned int x, y, i;
+-    int bits, depth, ibu, ibpp, offset;
++    unsigned int x, y;
++    int bits, depth, ibu, ibpp, offset, i;
+     unsigned long lbt;
+     Pixel pixel, px;
+ 
+@@ -605,6 +605,9 @@
+     ibpp = image->bits_per_pixel;
+     offset = image->xoffset;
+ 
++    if (image->bitmap_unit < 0)
++        return (XpmNoMemory);
++
+     if ((image->bits_per_pixel | image->depth) == 1) {
+ 	ibu = image->bitmap_unit;
+ 	for (y = 0; y < height; y++)
+--- openMotif-2.2.3/lib/Xm/Xpmcreate.c.CAN-2005-0605	2005-04-04 12:53:36.595531438 +0200
++++ openMotif-2.2.3/lib/Xm/Xpmcreate.c	2005-04-04 12:53:36.668521428 +0200
+@@ -1170,10 +1170,10 @@
+     register char *src;
+     register char *dst;
+     register unsigned int *iptr;
+-    register unsigned int x, y, i;
++    register unsigned int x, y;
+     register char *data;
+     Pixel pixel, px;
+-    int nbytes, depth, ibu, ibpp;
++    int nbytes, depth, ibu, ibpp, i;
+ 
+     data = image->data;
+     iptr = pixelindex;

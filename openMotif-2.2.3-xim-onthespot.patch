@@ -1,0 +1,227 @@
+diff -ur openMotif-2.2.3.org/lib/Xm/Text.c openMotif-2.2.3/lib/Xm/Text.c
+--- openMotif-2.2.3.org/lib/Xm/Text.c	2003-08-22 04:29:15.000000000 +0900
++++ openMotif-2.2.3/lib/Xm/Text.c	2005-03-08 11:31:36.226902456 +0900
+@@ -260,6 +260,7 @@
+                          XPointer client_data,
+                          XIMPreeditCaretCallbackStruct *call_data);
+ 
++static void ResetUnder(XmTextWidget tw);
+ 
+ /********    End Static Function Declarations    ********/
+ 
+@@ -3763,6 +3764,13 @@
+   (*tw->text.output->DrawInsertionPoint)(tw, tw->text.cursor_position, on);
+ }
+ 
++static void 
++ResetUnder(XmTextWidget tw)
++{
++    if (XmImGetXICResetState((Widget)tw) != XIMPreserveState)
++        PreUnder(tw) = False;
++}
++
+ /*
+  * Resets input method context.
+  *
+@@ -3794,12 +3802,16 @@
+   else 
+     XmImMbResetIC(widget, &mb);
+      
+-  if (!mb)
++  if (!mb) {
++    ResetUnder(tw);
+     return;
++  }
+   n = strlen(mb);
+ 
+-  if (n > TEXT_MAX_INSERT_SIZE)
++  if (n > TEXT_MAX_INSERT_SIZE) {
++    ResetUnder(tw);
+     return;
++  }
+ 
+   if (n > 0) {
+     (*tw->text.output->DrawInsertionPoint)(tw, tw->text.cursor_position, off);
+@@ -3810,11 +3822,13 @@
+           strchr(mb, '\t') == 0 ) {
+         (*tw->text.output->DrawInsertionPoint)(tw,
+                                                tw->text.cursor_position, on);
++        ResetUnder(tw);
+         return;
+       }
+     } else {
+       (*tw->text.output->DrawInsertionPoint)(tw,
+                                              tw->text.cursor_position, on);
++      ResetUnder(tw);
+       return;
+     }
+     beginPos = nextPos = XmTextGetCursorPosition(widget);
+@@ -3830,6 +3844,11 @@
+                                            XmsdRight, 1, TRUE);
+       if (nextPos > lastPos) nextPos = lastPos;
+     }
++    else if (PreUnder(tw) && PreStartTW(tw) < PreEndTW(tw)) {
++      beginPos = PreStartTW(tw);
++      nextPos = PreEndTW(tw);
++      XmTextSetHighlight(tw, beginPos, nextPos, XmHIGHLIGHT_NORMAL);
++    }
+ 
+     _XmTextReplace(widget, beginPos, nextPos, mb, False);
+     (*tw->text.output->DrawInsertionPoint)(tw,
+@@ -3837,8 +3856,29 @@
+ 
+     XtFree(mb);
+   }
++  ResetUnder(tw);
+ }
+ 
++XmTextPosition
++_XmTextSetPreeditPosition(Widget w,
++                          XmTextPosition position)
++{
++  XmTextWidget tw = (XmTextWidget)w;
++  XmTextPosition cursorPos = position;
++  if (tw != NULL && tw->text.onthespot) {
++    if (PreUnder(tw) && PreStartTW(tw) < PreEndTW(tw)) {
++      int diff = PreEndTW(tw) - PreStartTW(tw);
++      PreStartTW(tw) = cursorPos;
++      cursorPos += diff;
++      PreEndTW(tw) = PreCursorTW(tw) = cursorPos;
++    }
++    else {
++      PreStartTW(tw) = PreEndTW(tw) = PreCursorTW(tw) =
++        cursorPos;
++    }
++  }
++  return cursorPos;
++}
+ 
+ 
+ /****************************************************************
+@@ -4185,4 +4225,3 @@
+ {
+   return XtCreateWidget(name, xmTextWidgetClass, parent, arglist, argcount);
+ }
+-
+diff -ur openMotif-2.2.3.org/lib/Xm/TextF.c openMotif-2.2.3/lib/Xm/TextF.c
+--- openMotif-2.2.3.org/lib/Xm/TextF.c	2005-02-24 18:58:58.000000000 +0900
++++ openMotif-2.2.3/lib/Xm/TextF.c	2005-03-08 11:37:37.463986072 +0900
+@@ -893,6 +893,8 @@
+                          XmHighlightMode mode) ;
+ static Boolean TrimHighlights(XmTextFieldWidget tf, int *low, int *high);
+ 
++static void ResetUnder(XmTextFieldWidget tf);
++
+ /********    End Static Function Declarations    ********/
+ 
+ static XmConst XmTextScanType sarray[] = {
+@@ -9287,25 +9290,33 @@
+     else 
+     	XmImMbResetIC(w, &mb);
+ 
+-    if (!mb)
++    if (!mb) {
++        ResetUnder(tf);
+         return;
++    }
+ 
+     if (!TextF_Editable(tf)) {
+         if (tf->text.verify_bell) XBell(XtDisplay((Widget)tf), 0);
+     }
+ 
+-    if ((insert_length = strlen(mb)) > TEXT_MAX_INSERT_SIZE)
++    if ((insert_length = strlen(mb)) > TEXT_MAX_INSERT_SIZE) {
++        ResetUnder(tf);
+         return;
++    }
+ 
+     if (insert_length > 0) {
+         if (TextF_UseFontSet(tf)){
+             escapement = XmbTextExtents((XFontSet)TextF_Font(tf), mb,
+                         insert_length, &overall_ink, NULL );
+-            if ( escapement == 0 && overall_ink.width == 0 )
++            if ( escapement == 0 && overall_ink.width == 0 ) {
++                ResetUnder(tf);
+                 return;
++            }
+         } else {
+-            if (!XTextWidth(TextF_Font(tf), mb, insert_length))
++            if (!XTextWidth(TextF_Font(tf), mb, insert_length)) {
++                ResetUnder(tf);
+                 return;
++            }
+         }
+    }
+ 
+@@ -9334,9 +9345,17 @@
+     _XmTextFieldDrawInsertionPoint(tf, True);
+     if (str) XtFree(str);
+ 
++    ResetUnder(tf);
+ }
+ 
+ 
++static void 
++ResetUnder(XmTextFieldWidget tf)
++{
++    if (XmImGetXICResetState((Widget)tf) != XIMPreserveState)
++      tf->text.onthespot->under_preedit = False;
++}
++
+ /***********************************<->***************************************
+ 
+  *                              Public Functions                             *
+diff -ur openMotif-2.2.3.org/lib/Xm/TextI.h openMotif-2.2.3/lib/Xm/TextI.h
+--- openMotif-2.2.3.org/lib/Xm/TextI.h	2002-01-05 06:23:02.000000000 +0900
++++ openMotif-2.2.3/lib/Xm/TextI.h	2005-03-08 11:31:36.235901088 +0900
+@@ -128,7 +128,8 @@
+ 		            XmTextPosition *end,
+ 		            int maxsize);
+ 
+-
++extern XmTextPosition _XmTextSetPreeditPosition(Widget w,
++                                                XmTextPosition cursor_position);
+ /********    End Private Function Declarations    ********/
+ 
+ 
+diff -ur openMotif-2.2.3.org/lib/Xm/TextIn.c openMotif-2.2.3/lib/Xm/TextIn.c
+--- openMotif-2.2.3.org/lib/Xm/TextIn.c	2002-01-31 00:47:23.000000000 +0900
++++ openMotif-2.2.3/lib/Xm/TextIn.c	2005-03-08 11:31:36.240900328 +0900
+@@ -1440,6 +1440,7 @@
+ 				      &newblock, False) != EditDone) {
+ 	RingBell(w, event, params, num_params);
+       } else {
++	cursorPos = _XmTextSetPreeditPosition(w, cursorPos);
+ 	_XmTextSetCursorPosition(w, cursorPos);
+ 	CheckDisjointSelection(w, tw->text.cursor_position,
+ 			       event_time);
+diff -ur openMotif-2.2.3.org/lib/Xm/XmIm.c openMotif-2.2.3/lib/Xm/XmIm.c
+--- openMotif-2.2.3.org/lib/Xm/XmIm.c	2003-08-15 17:59:39.000000000 +0900
++++ openMotif-2.2.3/lib/Xm/XmIm.c	2005-03-08 11:31:36.242900024 +0900
+@@ -2692,3 +2692,13 @@
+     _XmAppUnlock(app);
+ }
+ 
++XIMResetState
++XmImGetXICResetState(Widget w)
++{
++    XmImXICInfo icp;
++    XIMResetState state = XIMInitialState;
++    icp = get_current_xic(get_xim_info(w), w);
++    if (icp != NULL && icp->xic != NULL)
++        XGetICValues(icp->xic, XNResetState, &state, NULL);
++    return state;
++}
+diff -ur openMotif-2.2.3.org/lib/Xm/XmIm.h openMotif-2.2.3/lib/Xm/XmIm.h
+--- openMotif-2.2.3.org/lib/Xm/XmIm.h	2002-01-05 06:23:16.000000000 +0900
++++ openMotif-2.2.3/lib/Xm/XmIm.h	2005-03-08 11:31:36.243899872 +0900
+@@ -101,6 +101,9 @@
+ 			Widget w,
+ 			char **mb);
+ 
++extern XIMResetState XmImGetXICResetState(
++			Widget w);
++
+ /********    End Public Function Declarations    ********/
+ 
+ #ifdef __cplusplus

@@ -1,0 +1,16 @@
+--- openMotif-2.2.3/lib/Xm/List.c.vizcount	2002-01-10 21:56:41.000000000 +0100
++++ openMotif-2.2.3/lib/Xm/List.c	2005-01-04 11:45:38.046987886 +0100
+@@ -1432,8 +1432,11 @@
+ 	lineheight = 1;
+     }
+ 
+-  viz = ((int)(listheight + lw->list.spacing) /
+-	 (int)(lineheight + lw->list.spacing));
++  if (lineheight + lw->list.spacing != 0)
++    viz = ((int)(listheight + lw->list.spacing) /
++	   (int)(lineheight + lw->list.spacing));
++  else
++    viz = (int)(listheight + lw->list.spacing);
+ 
+   if (!viz)
+     viz++;			/* Always have at least one item visible */

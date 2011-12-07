@@ -1,0 +1,10 @@
+--- openMotif-2.2.3/lib/Xm/EditresCom.c.noXaw	2006-07-05 13:29:30.000000000 -0400
++++ openMotif-2.2.3/lib/Xm/EditresCom.c	2006-07-05 13:29:39.000000000 -0400
+@@ -54,7 +54,6 @@
+ 
+ #include <X11/Xatom.h>
+ #include <X11/Xos.h>		/* for strcpy declaration */
+-#include <X11/Xaw/Cardinals.h>
+ #include <X11/Xmu/EditresP.h>
+ #include <X11/Xmu/CharSet.h>
+ #include <X11/Xmd.h>

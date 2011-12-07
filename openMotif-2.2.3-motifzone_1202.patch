@@ -1,0 +1,11 @@
+--- openMotif-2.2.3/clients/mwm/WmMenu.c.1202	2005-02-28 14:56:45.700387149 +0100
++++ openMotif-2.2.3/clients/mwm/WmMenu.c	2005-02-28 14:57:48.819725980 +0100
+@@ -532,6 +532,8 @@
+ 	newMenuItem->wmFunction = curMenuItem->wmFunction;
+ 
+ 	if ((curMenuItem->wmFunction == F_Send_Msg)
++	    || (curMenuItem->wmFunction == F_Circle_Up)
++	    || (curMenuItem->wmFunction == F_Circle_Down)
+ #ifdef WSM
+ 	    || (curMenuItem->wmFunction == F_Set_Context)
+ # ifdef PANELIST

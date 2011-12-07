@@ -1,0 +1,11 @@
+--- openMotif-2.2.3/clients/mwm/WmInitWs.c.multiscreen	2002-01-10 21:55:34.000000000 +0100
++++ openMotif-2.2.3/clients/mwm/WmInitWs.c	2005-02-28 14:55:23.579656012 +0100
+@@ -1490,6 +1490,8 @@
+ 	    ScreenOfDisplay(DISPLAY, sNum)); 	argnum++;
+     XtSetArg (args[argnum], XtNcolormap, 
+ 	    DefaultColormap(DISPLAY, sNum)); 	argnum++;
++    XtSetArg (args[argnum], XtNvisual,
++	      DefaultVisual(DISPLAY, sNum));	argnum++;
+ 
+     pSD->screenTopLevelW = XtCreatePopupShell ((String) wmGD.screenNames[sNum],
+ 					       vendorShellWidgetClass,

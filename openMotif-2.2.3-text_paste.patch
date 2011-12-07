@@ -1,0 +1,64 @@
+--- openMotif-2.2.3/lib/Xm/TextFSel.c.text_paste	2002-01-31 15:49:36.000000000 +0100
++++ openMotif-2.2.3/lib/Xm/TextFSel.c	2006-03-29 17:06:36.000000000 +0200
+@@ -1097,13 +1097,14 @@
+ 	wchar_t * wc_value;
+ 	
+ 	wc_value = (wchar_t*)XtMalloc ((unsigned)
+-				       (ds->length * sizeof(wchar_t)));
++				       ((ds->length + 1) * sizeof(wchar_t)));
+ 	_XmProcessLock();
+ 	prim_select->num_chars = mbstowcs(wc_value, (char *) ds->value,
+ 					  (size_t) ds->length);
+ 	if (prim_select->num_chars < 0) 
+ 	  prim_select->num_chars = 0;
+-	else 
++	else {
++	  wc_value[prim_select->num_chars] = 0;
+ 	  replace_res = 
+ 	    _XmTextFieldReplaceText(tf, ds->event, 
+ 				    replace_from,
+@@ -1111,6 +1112,7 @@
+ 				    (char*)wc_value, 
+ 				    prim_select->num_chars,
+ 				    ds->selection == atoms[XmACLIPBOARD]);
++	}
+ 	_XmProcessUnlock();
+ 	XtFree((char*)wc_value);
+       }
+--- openMotif-2.2.3/lib/Xm/TextF.c.text_paste	2006-03-29 17:06:36.000000000 +0200
++++ openMotif-2.2.3/lib/Xm/TextF.c	2006-03-29 17:06:36.000000000 +0200
+@@ -2886,7 +2886,8 @@
+   int free_insert = (int)False;
+   char *insert_orig;
+   int insert_length_orig;
+-  
++  int size = 0;
++
+   VerifyBounds(tf, &replace_prev, &replace_next);
+   
+   if (!TextF_Editable(tf)) {
+@@ -2931,8 +2932,12 @@
+      */
+     insert_length_orig = insert_length;
+     if (insert_length > 0) {
+-    	insert_orig = XtMalloc(insert_length * tf->text.max_char_size);
+-    	bcopy(insert, insert_orig, insert_length * tf->text.max_char_size);
++        if (tf->text.max_char_size == 1)
++	    size = sizeof(char);
++	else
++	    size = sizeof(wchar_t);
++	insert_orig = XtMalloc(insert_length * size);
++	bcopy(insert, insert_orig, insert_length * size);
+     } else
+ 	insert_orig = NULL;
+     if (!ModifyVerify(tf, event, &replace_prev, &replace_next,
+@@ -2947,8 +2952,7 @@
+     } else {
+       if (FUnderVerifyPreedit(tf))
+ 	if (insert_length != insert_length_orig ||
+-          memcmp(insert, insert_orig, 
+-		  insert_length * tf->text.max_char_size) != 0) {
++          memcmp(insert, insert_orig, insert_length * size) != 0) {
+ 	  FVerifyCommitNeeded(tf) = True;
+ 	  PreEnd(tf) += insert_length - insert_length_orig;
+ 	}

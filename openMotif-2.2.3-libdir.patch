@@ -1,0 +1,28 @@
+--- openmotif/clients/mwm/Makefile.am.libdir	2003-12-16 14:51:17.000000000 +0100
++++ openmotif/clients/mwm/Makefile.am	2003-12-16 14:51:23.000000000 +0100
+@@ -4,7 +4,7 @@
+ 
+ SUBDIRS = WmWsmLib
+ 
+-rcdir = @LIBDIR@
++rcdir = @LIB32DIR@
+ 
+ rc_DATA = system.mwmrc
+ 
+--- openmotif/configure.in.libdir	2003-12-16 14:46:52.000000000 +0100
++++ openmotif/configure.in	2003-12-16 14:53:30.000000000 +0100
+@@ -225,10 +225,13 @@
+ LIBDIR="${libdir}/X11"
+ AC_SUBST(LIBDIR)
+ 
++LIB32DIR="${libdir%64}/X11"
++AC_SUBST(LIB32DIR)
++
+ INCDIR="${includedir}/X11"
+ AC_SUBST(INCDIR)
+ 
+-XMBINDDIR_FALLBACK="${libdir}/X11/bindings"
++XMBINDDIR_FALLBACK="${libdir%64}/X11/bindings"
+ AC_SUBST(XMBINDDIR_FALLBACK)
+ 
+ AC_OUTPUT([Makefile \

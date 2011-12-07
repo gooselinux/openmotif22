@@ -1,0 +1,20 @@
+--- openMotif-2.2.3/clients/mwm/WmXSMP.c.1193	2005-02-28 14:58:53.168896287 +0100
++++ openMotif-2.2.3/clients/mwm/WmXSMP.c	2005-02-28 15:00:02.460388707 +0100
+@@ -446,10 +446,14 @@
+ static void
+ freeNewRestartCmd(char **restartCmd)
+ {
+-    while (*restartCmd != (char *)NULL)
+-	XtFree(*(restartCmd++));
++    if(restartCmd)
++    {
++        char **tmp = restartCmd;
++	while (*restartCmd != (char *)NULL)
++	    XtFree(*(restartCmd++));
+ 
+-    XtFree((char *)restartCmd);
++	XtFree((char *)restartCmd);
++    }
+ }
+ 
+ #endif /* ! WSM */

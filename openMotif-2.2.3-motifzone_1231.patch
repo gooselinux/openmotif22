@@ -1,0 +1,20 @@
+--- openMotif-2.2.3/lib/Xm/IconFile.c.motifzone_1231	2006-02-02 12:44:38.000000000 +0100
++++ openMotif-2.2.3/lib/Xm/IconFile.c	2006-02-02 12:45:31.000000000 +0100
+@@ -132,7 +132,7 @@
+      * we allocate both the offsets array and the names themselves in
+      * a heap hanging off the end of this struct
+      */
+-    short		nameOffsets[1];
++    unsigned short	nameOffsets[1];
+     /*
+     String		names
+     */
+@@ -240,7 +240,7 @@
+ 	     */
+ 	    validDir = (DtValidCachedDir) 
+ 	      XtMalloc((sizeof(DtValidCachedDirStruct)) +
+-		       (sizeof(short) * numFiles) +
++		       (sizeof(validDir->nameOffsets[0]) * numFiles) +
+ 		       (nameHeapSize));
+ 
+ 	    validDir->dirNameLen = strlen(dirName);

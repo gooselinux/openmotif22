@@ -1,0 +1,14 @@
+--- openMotif-2.2.3/lib/Mrm/MrmIheader.c.mrm	2003-08-15 17:04:34.000000000 +0200
++++ openMotif-2.2.3/lib/Mrm/MrmIheader.c	2005-09-02 17:16:37.000000000 +0200
+@@ -228,9 +228,10 @@
+ 
+   {
+     /* sscanf() may call ungetc(), which would write the XmConst string. */
+-    char buf[XtNumber(idb__database_version) + 1];
++    char *buf = XtMalloc(strlen(idb__database_version) + 1);
+     strcpy(buf, idb__database_version);
+     sscanf(buf, "URM %d.%d", &db_major, &db_minor);
++    XtFree(buf);
+   }
+     
+   if ((file_major > db_major) ||
